@@ -1,3 +1,4 @@
+CRYPTOGRAPHER
 Lossless File ↔ Video Encoder/Decoder
 
 Convert any file into a video and back again without losing data. Perfect for archiving, large file transport, or creative storage in a video format.
