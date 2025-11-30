@@ -1,21 +1,20 @@
 CRYPTOGRAPHER
-Lossless File ↔ Video Encoder/Decoder
 
 Convert any file into a video and back again without losing data. Perfect for archiving, large file transport, or creative storage in a video format.
 
 Features
 
-Encode files of any size into a video (FFV1 lossless codec).
+Encode files of any size into a video (FFV1 lossless codec)
 
-Decode videos back into the original file, bit-perfect.
+Decode videos back into the original file, bit-perfect
 
-Progress bars with tqdm for easy tracking.
+Progress bars with tqdm for easy tracking
 
-Works on macOS, Linux, Colab (CPU-only).
+Works on macOS, Linux, Colab (CPU-only)
 
-Streams frames efficiently — no huge memory usage.
+Streams frames efficiently — no huge memory usage
 
-Optional: can be adapted for YouTube-safe videos with error-tolerant encoding.
+Optional: can be adapted for YouTube-safe videos with error-tolerant encoding
 
 Dependencies
 
@@ -23,39 +22,32 @@ Python 3
 
 FFmpeg (brew install ffmpeg on macOS, sudo apt install ffmpeg on Linux)
 
-tqdm (for progress bars):
-
-pip install tqdm
-
+tqdm (for progress bars): pip install tqdm
 
 No other libraries are required.
 
 Usage
-1. Encode a file into a video
-python beast.py
+Encode a file into a video
 
+Run the script: python main.py
 
-Then select e (encode), and follow prompts:
+Choose e for encode
 
-Encode or Decode? (e/d): e
-Enter file path: myfile.zip
-Enter output video path (e.g., output.avi): myfile_video.avi
+Enter the input file path
 
+Enter the output video path (e.g., output.avi)
 
-The script will show a progress bar for frame encoding.
+The script will show a progress bar for encoding frames. The output is a lossless video containing your file data.
 
-The output is a lossless video containing your file data.
+Decode a video back into a file
 
-2. Decode a video back into a file
-python beast.py
+Run the script: python main.py
 
+Choose d for decode
 
-Then select d (decode), and follow prompts:
+Enter the input video path
 
-Encode or Decode? (e/d): d
-Enter video path: myfile_video.avi
-Enter output file path: restored.zip
-
+Enter the output file path
 
 The script will reconstruct the original file exactly, verified via hash.
 
@@ -65,7 +57,7 @@ Large files: encoding/decoding may take minutes to hours depending on file size 
 
 CPU-bound: this version uses CPU only for lossless encoding; no GPU is required.
 
-YouTube-safe videos: if you want to share encoded videos on platforms that recompress (YouTube, etc.), map pixel values to safe ranges to reduce compression artifacts.
+YouTube-safe videos: to share encoded videos on platforms that recompress, map pixel values to safe ranges to reduce compression artifacts.
 
 Colab-friendly: works perfectly on Google Colab; just install FFmpeg and optionally mount Google Drive for large files.
 
@@ -74,19 +66,9 @@ License
 This project is open-source and free to use under the MIT License.
 
 Example Workflow
-# Encode a file
-python beast.py
-# e → input file → output video
 
-# Decode the video
-python beast.py
-# d → input video → output file
+Encode a file: run the script, choose e, input file path, output video path
 
+Decode a file: run the script, choose d, input video path, output file path
 
-Verify integrity with SHA256:
-
-shasum -a 256 original.zip
-shasum -a 256 restored.zip
-
-
-✅ Hashes should match exactly.
+Verify integrity with SHA256: compare the hash of the original file and the restored file. ✅ They should match exactly.
