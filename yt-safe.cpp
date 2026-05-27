@@ -144,7 +144,7 @@ static int encode_file(const std::string& in_file, const std::string& out_vid) {
     char cmd[2048];
     int n = snprintf(cmd, sizeof(cmd),
         "ffmpeg -y -f rawvideo -pix_fmt rgb24 -s %ux%u -r 30 -i - "
-        "-c:v ffv1 -preset ultrafast \"%s\"",
+        "-c:v ffv1 \"%s\"",
         (unsigned)width, (unsigned)height, out_vid.c_str());
     if (n < 0 || (size_t)n >= sizeof(cmd)) {
         std::cerr << "FFmpeg command too long\n";
