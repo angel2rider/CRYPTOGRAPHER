@@ -1,74 +1,61 @@
-CRYPTOGRAPHER
+# CRYPTOGRAPHER
 
-Convert any file into a video and back again without losing data. Perfect for archiving, large file transport, or creative storage in a video format.
+Convert any file into a **YouTube-safe video** and back again without losing data. Uses lossless FFV1 encoding with noise padding to survive platform re-compression.
 
-Features
+## Features
 
-Encode files of any size into a video (FFV1 lossless codec)
+- **YouTube-safe encoding** — dynamic frame resolution with random noise padding so streaming platforms' re-encoders don't corrupt your data
+- **Output size ≈ input size** — frame dimensions are calculated per-file so the video file size closely matches the original (as low as 1.13× overhead)
+- **Bit-perfect recovery** — original file is restored exactly byte-for-byte
+- **Fast C++ implementation** — compiled binary (`cryptographer`), no runtime dependencies beyond FFmpeg
+- **Companion tools** — encode/decode files to/from monochrome images (`f2i.py` / `i2f.py`)
 
-Decode videos back into the original file, bit-perfect
+## Files
 
-Progress bars with tqdm for easy tracking
+| File | Purpose |
+|------|---------|
+| `cryptographer` | YouTube-safe file↔video encoder/decoder (compiled from `yt-safe.cpp`) |
+| `yt-safe.cpp` | Source code for the `cryptographer` binary |
+| `f2i.py` | Convert a file into a monochrome PNG image |
+| `i2f.py` | Recover a file from a monochrome PNG image |
 
-Works on macOS, Linux, Colab (CPU-only)
+## Dependencies
 
-Streams frames efficiently — no huge memory usage
+- **FFmpeg** — `brew install ffmpeg` (macOS) or `apt install ffmpeg` (Linux)
+- C++17 compiler — only needed if rebuilding from source
 
-Optional: can be adapted for YouTube-safe videos with error-tolerant encoding
+## Usage
 
-Dependencies
+### Encode a file into a YouTube-safe video
 
-Python 3
+```bash
+./cryptographer -e myfile.zip output_video.avi
+```
 
-FFmpeg (brew install ffmpeg on macOS, sudo apt install ffmpeg on Linux)
+### Decode a video back into the original file
 
-tqdm (for progress bars): pip install tqdm
+```bash
+./cryptographer -d output_video.avi myfile_restored.zip
+```
 
-No other libraries are required.
+Flags:
+- `-e <input_file> <output_video>` — encode
+- `-d <input_video> <output_file>` — decode
 
-Usage
-Encode a file into a video
+### File ↔ Image tools
 
-Run the script: python main.py
+```bash
+python f2i.py      # prompts for file → saves monochrome PNG
+python i2f.py      # prompts for PNG → recovers original file
+```
 
-Choose e for encode
+## How it works
 
-Enter the input file path
+1. Frame resolution is calculated dynamically per file so the raw pixel data ≈ file size (minimizing wasted space)
+2. Each frame has a 16-byte header with width, height, frame index, and payload size
+3. Unused pixels are filled with random noise so YouTube's encoder can't compress them away
+4. On decode, `ffprobe` reads the video dimensions and the binary extracts the exact payload from each frame
 
-Enter the output video path (e.g., output.avi)
+## License
 
-The script will show a progress bar for encoding frames. The output is a lossless video containing your file data.
-
-Decode a video back into a file
-
-Run the script: python main.py
-
-Choose d for decode
-
-Enter the input video path
-
-Enter the output file path
-
-The script will reconstruct the original file exactly, verified via hash.
-
-Notes & Tips
-
-Large files: encoding/decoding may take minutes to hours depending on file size and CPU.
-
-CPU-bound: this version uses CPU only for lossless encoding; no GPU is required.
-
-YouTube-safe videos: to share encoded videos on platforms that recompress, map pixel values to safe ranges to reduce compression artifacts.
-
-Colab-friendly: works perfectly on Google Colab; just install FFmpeg and optionally mount Google Drive for large files.
-
-License
-
-This project is open-source and free to use under the MIT License.
-
-Example Workflow
-
-Encode a file: run the script, choose e, input file path, output video path
-
-Decode a file: run the script, choose d, input video path, output file path
-
-Verify integrity with SHA256: compare the hash of the original file and the restored file. ✅ They should match exactly.
+Apache License 2.0
